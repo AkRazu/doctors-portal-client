@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import "./Footer.css";
 const Footer = () => {
   const date = new Date();
-
   const year = date.getFullYear();
+
+
   return (
-    
       <footer className="footer-bg">
-        <div className="footer p-10 text-neutral-content text-black">
+        <div className="footer p-10 text-black">
         <div>
           <span className="footer-title">Services</span>
           <Link to="/" className="link link-hover">
