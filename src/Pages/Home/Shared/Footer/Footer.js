@@ -6,8 +6,9 @@ const Footer = () => {
 
   const year = date.getFullYear();
   return (
-    <section className="footer-bg">
-      <footer className="footer p-10 text-neutral-content text-black">
+    
+      <footer className="footer-bg">
+        <div className="footer p-10 text-neutral-content text-black">
         <div>
           <span className="footer-title">Services</span>
           <Link to="/" className="link link-hover">
@@ -50,13 +51,13 @@ const Footer = () => {
             Cookie policy
           </Link>
         </div>
-      </footer>
-      <div>
+        </div>
+        <div>
         <p className="text-center">
           Copyright &copy; {year} - All right reserved by Doctors Portal
         </p>
       </div>
-    </section>
+      </footer>
   );
 };
 
