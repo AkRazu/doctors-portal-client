@@ -2,7 +2,27 @@ import { format } from "date-fns/esm";
 import React from "react";
 
 const BookingModal = ({ treatment, selectDate }) => {
-  const { name,slots } = treatment;
+  const { name, slots } = treatment;
+  const date = format(selectDate, "PP");
+
+  const handleBooking = (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const slot = form.slot.value;
+    const name = form.name.value;
+    const phone = form.phone.value;
+    const email = form.email.value;
+    const booking = {
+      appointmentDate: date,
+      treatment: name,
+      patient: name,
+      slot,
+      email,
+      phone,
+    };
+    console.log(booking);
+  };
+
   return (
     <>
       <input type="checkbox" id="booking-modal" className="modal-toggle" />
@@ -15,34 +35,37 @@ const BookingModal = ({ treatment, selectDate }) => {
             ✕
           </label>
           <h3 className="text-lg font-bold">{name}</h3>
-          <form className="grid grid-cols-1">
+          <form onSubmit={handleBooking} className="grid grid-cols-1">
             <input
               disabled
               type="text"
-              value={format(selectDate, "PP")}
+              value={date}
               className="input input-bordered w-full  my-2"
             />
-            <select className="select select-bordered w-full">
+            <select name="slot" className="select select-bordered w-full">
               <option disabled selected>
                 Who shot first?
               </option>
-             {
-              slots.map(slot =>  <option value={slot} selected>
-                {slot}
-              </option>)
-             }
+              {slots.map((slot, idx) => (
+                <option key={idx} value={slot} selected>
+                  {slot}
+                </option>
+              ))}
             </select>
             <input
+              name="name"
               type="text"
               placeholder="Full Name"
               className="input input-bordered w-full  my-2"
             />
             <input
+              name="phone"
               type="text"
               placeholder="Phone Number"
               className="input input-bordered w-full  my-2"
             />
             <input
+              name="email"
               type="text"
               placeholder="Email"
               className="input input-bordered w-full  my-2"
