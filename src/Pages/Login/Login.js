@@ -16,13 +16,14 @@ const Login = () => {
   return (
     <div className="h-[800px] flex justify-center items-center">
       <div className="w-96 p-7 shadow-xl rounded-lg">
-        <h2 className="text-xl">Login</h2>
+        <h2 className="text-xl text-center">Login</h2>
         <form onSubmit={handleSubmit(handelLogin)}>
           <div className="form-control w-full max-w-xs">
             <label className="label">
               <span className="label-text">Email</span>
             </label>
             <input
+            type='email'
               {...register("email", { required: "Email Address is required" })}
               className="input input-bordered w-full max-w-xs "
             />
