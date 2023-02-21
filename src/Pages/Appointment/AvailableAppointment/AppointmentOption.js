@@ -2,7 +2,7 @@ import React from "react";
 
 const AppointmentOption = ({ option, setTreatment }) => {
   const { name, slots } = option;
-  console.log(option);
+  
   return (
     <div className="card bg-base-100 shadow-xl ">
       <div className="card-body text-center">

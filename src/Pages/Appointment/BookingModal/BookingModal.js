@@ -20,7 +20,8 @@ const BookingModal = ({ treatment, selectDate }) => {
       email,
       phone,
     };
-    console.log(booking);
+    
+    
   };
 
   return (
