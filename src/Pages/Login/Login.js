@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../contexts/AuthProvider";
 
 const Login = () => {
   const {
@@ -9,8 +10,15 @@ const Login = () => {
     handleSubmit,
   } = useForm();
 
+  const { signIn } = useContext(AuthContext);
   const handelLogin = (data) => {
     console.log(data);
+    signIn(data.email, data.password)
+      .then((result) => {
+        const user = result.user;
+        console.log(user);
+      })
+      .catch((err) => console.log(err));
   };
   console.log();
   return (
@@ -23,7 +31,7 @@ const Login = () => {
               <span className="label-text">Email</span>
             </label>
             <input
-            type='email'
+              type="email"
               {...register("email", { required: "Email Address is required" })}
               className="input input-bordered w-full max-w-xs "
             />
@@ -40,7 +48,10 @@ const Login = () => {
             <input
               {...register("password", {
                 required: "Password is required",
-                minLength: { value: 6, message: "Password must be 6 characters or longer" },
+                minLength: {
+                  value: 6,
+                  message: "Password must be 6 characters or longer",
+                },
               })}
               type="password"
               className="input input-bordered w-full max-w-xs"
