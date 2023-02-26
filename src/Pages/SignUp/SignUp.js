@@ -1,7 +1,10 @@
+import { toHaveStyle } from "@testing-library/jest-dom/dist/matchers";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
+import toast from 'react-hot-toast';
+
 const SignUp = () => {
     const{createUser, updateUser}= useContext(AuthContext)
     const [signUpError, setSignUPError] = useState('');
@@ -18,16 +21,24 @@ const SignUp = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        toast.success('User create successful')
+        const userInfo = {
+          displayName : data?.name
+        }
+        updateUser(userInfo)
+        .then(()=>{})
+        .catch(err=>console.log(err))
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(error);
+        setSignUPError(error?.message);
         // ..
       });
   };
   return (
     <div>
+      
       <div className="h-[800px] flex justify-center items-center">
         <div className="w-96 p-7 shadow-xl rounded-lg">
           <h2 className="text-xl text-center">Sign Up</h2>
@@ -83,12 +94,16 @@ const SignUp = () => {
                 <p className="text-red-500">{errors.password.message}</p>
               )}
             </div>
+            
             <input
               value="Sign Up"
               className="btn btn-accent  w-full max-w-xs my-2"
               type="submit"
             />
           </form>
+          {
+              signUpError&&<p className="text-red-500">{signUpError}</p>
+            }
           <p className="text-center my-4">
             Already have an account ?
             <Link className="text-secondary" to="/login">

@@ -12,7 +12,7 @@ const Login = () => {
 
   const { signIn } = useContext(AuthContext);
   const handelLogin = (data) => {
-    console.log(data);
+    
     signIn(data.email, data.password)
       .then((result) => {
         const user = result.user;
@@ -20,7 +20,6 @@ const Login = () => {
       })
       .catch((err) => console.log(err));
   };
-  console.log();
   return (
     <div className="h-[800px] flex justify-center items-center">
       <div className="w-96 p-7 shadow-xl rounded-lg">
