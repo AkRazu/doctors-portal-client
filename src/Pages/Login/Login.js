@@ -1,7 +1,8 @@
-import React, { useContext, useState } from "react";
+import React, { useContext} from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
+import { useLocation } from "react-router-dom";
 
 const Login = () => {
   const {
@@ -9,7 +10,9 @@ const Login = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
-
+  let navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
   const { signIn } = useContext(AuthContext);
   const handelLogin = (data) => {
     
@@ -17,6 +20,7 @@ const Login = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
+        navigate(from, { replace: true });
       })
       .catch((err) => console.log(err));
   };
