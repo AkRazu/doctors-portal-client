@@ -1,28 +1,47 @@
 import { format } from "date-fns/esm";
 import React, { useContext } from "react";
+import toast from "react-hot-toast";
 import { AuthContext } from "../../../contexts/AuthProvider";
 
-const BookingModal = ({ treatment, selectDate }) => {
+const BookingModal = ({ treatment, selectDate,refetch }) => {
   const { name, slots } = treatment;
   const date = format(selectDate, "PP");
-  const {user}=useContext(AuthContext);
+  const { user } = useContext(AuthContext);
 
   const handleBooking = (event) => {
     event.preventDefault();
     const form = event.target;
     const slot = form.slot.value;
-    const name = form.name.value;
+    const displayName = form.displayName.value;
     const phone = form.phone.value;
     const email = form.email.value;
     const booking = {
       appointmentDate: date,
       treatment: name,
-      patient: name,
+      patient: displayName,
       slot,
       email,
       phone,
     };
-    
+
+    fetch("http://localhost:5000/bookings", {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (data.acknowledged) {
+          toast.success("Booking confirmed");
+          refetch();
+        }else{
+          toast.error(data.message);
+        }
+      });
+
     console.log(booking);
   };
 
@@ -56,7 +75,7 @@ const BookingModal = ({ treatment, selectDate }) => {
               ))}
             </select>
             <input
-              name="name"
+              name="displayName"
               type="text"
               value={user?.displayName}
               disabled
@@ -77,7 +96,7 @@ const BookingModal = ({ treatment, selectDate }) => {
               placeholder="Phone Number"
               className="input input-bordered w-full  my-2"
             />
-            
+
             <input
               type="submit"
               value="submit"
