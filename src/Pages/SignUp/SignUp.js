@@ -1,14 +1,14 @@
 import { toHaveStyle } from "@testing-library/jest-dom/dist/matchers";
 import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
 import toast from 'react-hot-toast';
 
 const SignUp = () => {
     const{createUser, updateUser}= useContext(AuthContext)
     const [signUpError, setSignUPError] = useState('');
-
+    const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -26,7 +26,9 @@ const SignUp = () => {
           displayName : data?.name
         }
         updateUser(userInfo)
-        .then(()=>{})
+        .then(()=>{
+          navigate('/')
+        })
         .catch(err=>console.log(err))
       })
       .catch((error) => {

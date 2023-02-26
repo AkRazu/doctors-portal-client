@@ -1,9 +1,11 @@
 import { format } from "date-fns/esm";
-import React from "react";
+import React, { useContext } from "react";
+import { AuthContext } from "../../../contexts/AuthProvider";
 
 const BookingModal = ({ treatment, selectDate }) => {
   const { name, slots } = treatment;
   const date = format(selectDate, "PP");
+  const {user}=useContext(AuthContext);
 
   const handleBooking = (event) => {
     event.preventDefault();
@@ -21,7 +23,7 @@ const BookingModal = ({ treatment, selectDate }) => {
       phone,
     };
     
-    
+    console.log(booking);
   };
 
   return (
@@ -56,7 +58,17 @@ const BookingModal = ({ treatment, selectDate }) => {
             <input
               name="name"
               type="text"
+              value={user?.displayName}
+              disabled
               placeholder="Full Name"
+              className="input input-bordered w-full  my-2"
+            />
+            <input
+              name="email"
+              type="text"
+              value={user?.email}
+              placeholder="Email"
+              disabled
               className="input input-bordered w-full  my-2"
             />
             <input
@@ -65,12 +77,7 @@ const BookingModal = ({ treatment, selectDate }) => {
               placeholder="Phone Number"
               className="input input-bordered w-full  my-2"
             />
-            <input
-              name="email"
-              type="text"
-              placeholder="Email"
-              className="input input-bordered w-full  my-2"
-            />
+            
             <input
               type="submit"
               value="submit"
