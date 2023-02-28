@@ -3,12 +3,12 @@ import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../contexts/AuthProvider";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const SignUp = () => {
-    const{createUser, updateUser}= useContext(AuthContext)
-    const [signUpError, setSignUPError] = useState('');
-    const navigate = useNavigate();
+  const { createUser, updateUser } = useContext(AuthContext);
+  const [signUpError, setSignUPError] = useState("");
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -21,26 +21,40 @@ const SignUp = () => {
       .then((result) => {
         const user = result.user;
         console.log(user);
-        toast.success('User create successful')
+        toast.success("User create successful");
         const userInfo = {
-          displayName : data?.name
-        }
+          displayName: data?.name,
+        };
         updateUser(userInfo)
-        .then(()=>{
-          navigate('/')
-        })
-        .catch(err=>console.log(err))
+          .then(() => {
+            saveUser(data.name, data.email);
+          })
+          .catch((err) => console.log(err));
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
         setSignUPError(error?.message);
         // ..
       });
   };
+
+  const saveUser = (name, email) => {
+    const user = { name, email };
+
+    fetch("http://localhost:5000/users", {
+      method: "POST",
+      body: JSON.stringify(user),
+      headers: {
+        "Content-type": "application/json; charset=UTF-8",
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        navigate("/");
+      });
+  };
   return (
     <div>
-      
       <div className="h-[800px] flex justify-center items-center">
         <div className="w-96 p-7 shadow-xl rounded-lg">
           <h2 className="text-xl text-center">Sign Up</h2>
@@ -96,16 +110,14 @@ const SignUp = () => {
                 <p className="text-red-500">{errors.password.message}</p>
               )}
             </div>
-            
+
             <input
               value="Sign Up"
               className="btn btn-accent  w-full max-w-xs my-2"
               type="submit"
             />
           </form>
-          {
-              signUpError&&<p className="text-red-500">{signUpError}</p>
-            }
+          {signUpError && <p className="text-red-500">{signUpError}</p>}
           <p className="text-center my-4">
             Already have an account ?
             <Link className="text-secondary" to="/login">
