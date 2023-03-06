@@ -7,6 +7,7 @@ const AddDoctor = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const imageHostKey = process.env.REACT_APP_imgbb_key;
 
   const { data: specialties, isLoading } = useQuery({
     queryKey: ["specialty"],
@@ -21,8 +22,31 @@ const AddDoctor = () => {
     return <p>Loading....</p>;
   }
   const handelSignup = (data) => {
-    console.log(data);
+    // console.log(data);
+    const img = data.img[0];
+    const formData = new FormData();
+    formData.append("image", img);
+    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imageHostKey}`;
+
+    fetch(url, {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((imageData) => {
+        if (imageData.success) {
+          console.log("Success:", imageData);
+          const doctor = {
+            name: data.name,
+            email: data.email,
+            specialty: data.specialty,
+            image: imageData.data.url,
+          };
+          console.log(doctor);
+        }
+      });
   };
+  //   console.log('Key', imageHostKey);
   return (
     <div className="h-[800px] ">
       <h2 className="font-bold text-2xl">Add a New Doctor</h2>
@@ -58,7 +82,10 @@ const AddDoctor = () => {
           <label className="label">
             <span className="label-text">Specialty</span>
           </label>
-          <select className="select input-bordered w-full max-w-xs">
+          <select
+            {...register("specialty")}
+            className="select input-bordered w-full max-w-xs"
+          >
             {specialties.map((specialty) => (
               <option key={specialty._id} value={specialty.name}>
                 {specialty.name}
@@ -79,6 +106,7 @@ const AddDoctor = () => {
 
           <input
             type="file"
+            name="img"
             className="file-input file-input-bordered w-full max-w-xs"
             {...register("img", { required: "Photo is required" })}
           />

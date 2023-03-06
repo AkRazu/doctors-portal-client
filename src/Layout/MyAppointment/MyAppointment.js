@@ -6,7 +6,7 @@ const MyAppointment = () => {
 
   const url = `http://localhost:5000/bookings?email=${user?.email}`;
 
-  const { data: bookings = [] } = useQuery({
+  const { data: bookings = [],isLoading } = useQuery({
     queryKey: ["bookings", user?.email],
     queryFn: () =>
       fetch(url, {
@@ -15,6 +15,9 @@ const MyAppointment = () => {
         },
       }).then((res) => res.json()),
   });
+  if(isLoading){
+    return <p>Loading....</p>
+  }
   console.log(bookings);
   return (
     <div>

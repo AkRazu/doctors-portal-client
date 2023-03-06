@@ -68,7 +68,7 @@ const BookingModal = ({ treatment, selectDate,refetch }) => {
               <option disabled selected>
                 Who shot first?
               </option>
-              {slots.map((slot, idx) => (
+              {slots?.map((slot, idx) => (
                 <option key={idx} value={slot} selected>
                   {slot}
                 </option>
