@@ -1,7 +1,10 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 const AddDoctor = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -19,14 +22,14 @@ const AddDoctor = () => {
   });
 
   if (isLoading) {
-    return <p>Loading....</p>;
+    return <progress className="progress w-56"></progress>;
   }
   const handelSignup = (data) => {
     // console.log(data);
     const img = data.img[0];
     const formData = new FormData();
     formData.append("image", img);
-    const url = `https://api.imgbb.com/1/upload?expiration=600&key=${imageHostKey}`;
+    const url = `https://api.imgbb.com/1/upload?key=${imageHostKey}`;
 
     fetch(url, {
       method: "POST",
@@ -42,7 +45,20 @@ const AddDoctor = () => {
             specialty: data.specialty,
             image: imageData.data.url,
           };
-          console.log(doctor);
+          fetch(`http://localhost:5000/doctors`, {
+            method: "POST",
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+              authorization: `bearer ${localStorage.getItem("accessToken")}`,
+            },
+            body: JSON.stringify(doctor),
+          })
+            .then((response) => response.json())
+            .then((json) => {
+              console.log(json);
+              navigate("/dashboard/managedoctors");
+              toast.success(`${data.name} is added successful`);
+            });
         }
       });
   };
@@ -51,7 +67,8 @@ const AddDoctor = () => {
     <div className="h-[800px] ">
       <h2 className="font-bold text-2xl">Add a New Doctor</h2>
 
-      <form onSubmit={handleSubmit(handelSignup)}>
+     <div className="flex justify-center">
+     <form onSubmit={handleSubmit(handelSignup)}>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">Name * </span>
@@ -117,6 +134,7 @@ const AddDoctor = () => {
           type="submit"
         />
       </form>
+     </div>
     </div>
   );
 };

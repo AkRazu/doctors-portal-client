@@ -1,12 +1,13 @@
 import React, { useContext } from "react";
 import { AuthContext } from "../../contexts/AuthProvider";
 import { useQuery } from "@tanstack/react-query";
+import Loading from "../../Pages/Loading/Loading";
 const MyAppointment = () => {
   const { user } = useContext(AuthContext);
 
   const url = `http://localhost:5000/bookings?email=${user?.email}`;
 
-  const { data: bookings = [],isLoading } = useQuery({
+  const { data: bookings = [], isLoading } = useQuery({
     queryKey: ["bookings", user?.email],
     queryFn: () =>
       fetch(url, {
@@ -15,8 +16,8 @@ const MyAppointment = () => {
         },
       }).then((res) => res.json()),
   });
-  if(isLoading){
-    return <p>Loading....</p>
+  if (isLoading) {
+    return <progress className="progress w-56"></progress>;
   }
   console.log(bookings);
   return (
@@ -38,7 +39,7 @@ const MyAppointment = () => {
           </thead>
           <tbody>
             {/* row 1 */}
-            {bookings.map((booking, i) => (
+            {bookings?.map((booking, i) => (
               <tr key={booking._id}>
                 <th>{i + 1}</th>
                 <td>{booking?.patient}</td>
